@@ -20,6 +20,7 @@ resource "aws_internet_gateway" "main" {
     }
 }
 
+
 resource "aws_route_table" "route-table-1" {
     vpc_id     = aws_vpc.main.id
 
@@ -34,6 +35,22 @@ resource "aws_route_table" "route-table-1" {
 }
 
 
+resource "aws_route_table" "route-table-2" {
+    vpc_id     = aws_vpc.main.id
+
+    tags = {
+        Name = "Studio Route Table 2"
+    }
+
+    route {
+        cidr_block = "0.0.0.0/0"
+        gateway_id = aws_internet_gateway.main.id
+    }
+}
+
+
+
+
 
 resource "aws_subnet" "subnet-1" {
   vpc_id     = aws_vpc.main.id
@@ -46,12 +63,29 @@ resource "aws_subnet" "subnet-1" {
   }
 }
 
+resource "aws_subnet" "db-subnet" {
+  vpc_id     = aws_vpc.main.id
+  cidr_block = var.db_subnet_cidr #"10.0.0.0/24"
+  map_public_ip_on_launch = true
+  availability_zone = var.availability_zone
+
+  tags = {
+    Name = "Studio-db-subnet 1"
+  }
+}
+
 
 
 resource "aws_route_table_association" "a" {
   subnet_id      = aws_subnet.subnet-1.id
   route_table_id = aws_route_table.route-table-1.id
 }
+
+resource "aws_route_table_association" "b" {
+  subnet_id      = aws_subnet.db-subnet.id
+  route_table_id = aws_route_table.route-table-2.id
+}
+
 
 
 resource "aws_network_interface" "test-interface" {
@@ -72,8 +106,8 @@ resource "aws_eip" "one" {
 }
 
 resource "aws_network_interface" "db-interface" {
-  subnet_id   = aws_subnet.subnet-1.id
-  security_groups = [aws_security_group.test-sg.id]
+  subnet_id   = aws_subnet.db-subnet.id
+  security_groups = [aws_security_group.db-sg.id]
   private_ips = [var.db_private_ip]
 
   tags = {
@@ -92,10 +126,10 @@ resource "aws_eip_association" "eip_assoc1" {
   instance_id   = aws_instance.web.id
   allocation_id = aws_eip.one.id
 }
-# resource "aws_eip_association" "eip_assoc2" {
-#   instance_id   = aws_instance.db.id
-#   allocation_id = aws_eip.two.id
-# }
+resource "aws_eip_association" "eip_assoc2" {
+  instance_id   = aws_instance.db.id
+  allocation_id = aws_eip.two.id
+}
 # resource "aws_route53_record" "terraform" {
 #   zone_id = var.route53_zone
 #   name    = var.terraform_site

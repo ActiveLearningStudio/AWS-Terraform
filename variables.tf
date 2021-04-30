@@ -2,6 +2,10 @@ variable "subnet_cidr" {
   description = "subnet_cidr"
   type = string
 }
+variable "db_subnet_cidr" {
+  description = "db_subnet_cidr"
+  type = string
+}
 
 variable "private_key_path" {
   description = "private_key_path"
@@ -96,10 +100,10 @@ variable "curriki_app_key" {
   type = string
 }
 
-variable "mysql_host" {
-  description = "mysql_host"
-  type = string
-}
+# variable "mysql_host" {
+#   description = "mysql_host"
+#   type = string
+# }
 
 variable "mysql_database" {
   description = "mysql_database"
@@ -133,6 +137,11 @@ variable "mysql_local_port" {
   description = "mysql_local_port"
   type = string
 }
+variable "phpmyadmin_exposed_port" {
+  description = "phpmyadmin_exposed_port"
+  type = string
+}
+
 variable "pgadmin_default_email" {
   description = "pgadmin_default_email"
   type = string
@@ -142,10 +151,10 @@ variable "pgadmin_default_password" {
   type = string
 }
 
-variable "postgres_host" {
-  description = "postgres_host"
-  type = string
-}
+# variable "postgres_host" {
+#   description = "postgres_host"
+#   type = string
+# }
 variable "postgres_user" {
   description = "postgres_user"
   type = string

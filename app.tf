@@ -76,8 +76,8 @@ resource "aws_instance" "web" {
   }
 }
 
-resource "null_resource" "cluster" {
-    depends_on = [ aws_instance.web ]
+resource "null_resource" "web-cluster" {
+    depends_on = [ aws_instance.web, aws_instance.db ]
     provisioner "remote-exec" {
         inline = [
            "git clone https://github.com/ActiveLearningStudio/ActiveLearningStudio-docker-containers.git ~/curriki",
@@ -97,7 +97,7 @@ resource "null_resource" "cluster" {
             "sed -i \"s/react_app_h5p_key/${var.react_app_h5p_key}/g\" ~/curriki/setup.sh",
 
             "sed -i \"s/curriki_app_key/${var.curriki_app_key}/g\" ~/curriki/setup.sh",
-            "sed -i \"s/curriki_postgres_db_host/${var.postgres_host}/g\" ~/curriki/setup.sh",
+            "sed -i \"s/curriki_postgres_db_host/${aws_instance.db.public_ip}/g\" ~/curriki/setup.sh",
             "sed -i \"s/curriki_postgres_db_port/${var.postges_exposed_port}/g\" ~/curriki/setup.sh",
             "sed -i \"s/curriki_postgres_db/${var.postgres_db}/g\" ~/curriki/setup.sh",
             "sed -i \"s/curriki_postgres_user/${var.postgres_user}/g\" ~/curriki/setup.sh",
@@ -112,7 +112,7 @@ resource "null_resource" "cluster" {
             "sed -i \"s/curriki_lrs_username/${var.lrs_username}/g\" ~/curriki/setup.sh",
             "sed -i \"s/curriki_lrs_password/${var.lrs_password}/g\" ~/curriki/setup.sh",
             "sed -i \"s/curriki_lrs_db_database/${var.postgres_trax_db}/g\" ~/curriki/setup.sh",
-            "sed -i \"s/curriki_mysql_db_host/${var.mysql_host}/g\" ~/curriki/setup.sh",
+            "sed -i \"s/curriki_mysql_db_host/${aws_instance.db.public_ip}/g\" ~/curriki/setup.sh",
             "sed -i \"s/curriki_mysql_db_port/${var.mysql_local_port}/g\" ~/curriki/setup.sh",
             "sed -i \"s/curriki_tsugi_db_dbname/${var.mysql_database}/g\" ~/curriki/setup.sh",
             "sed -i \"s/curriki_mysql_db_user/${var.mysql_user}/g\" ~/curriki/setup.sh",
