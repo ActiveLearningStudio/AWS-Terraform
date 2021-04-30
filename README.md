@@ -1,6 +1,6 @@
 # AWS-Terraform
 
-##Installation
+## Installation
 
 1. Generate / Or use exising AWS key
 2. RUN `terraform init`
@@ -13,7 +13,10 @@ Once record has been put, login into the web server and run
 
 1. RUN `cd curriki && sudo ./init-letsencrypt.sh`
 
-TODO
+## TODO
+
 Elastic Search
 
-Note: Documentaion is still being developed so stay tuned for more
+## Note
+
+Documentaion is still being developed so stay tuned for more
