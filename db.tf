@@ -113,7 +113,7 @@ resource "null_resource" "db-cluster" {
            "sed -i 's/substitute-postgres-database/${var.postgres_trax_db}/g' ~/curriki-db/postgresscripts/traxdb.sql",
             "sed -i 's/substitute-postgres-password/${var.postgres_password}/g' ~/curriki-db/postgresscripts/db-update-creds.sql",
            "cp ~/curriki-db/.env.example  ~/curriki-db/.env",
-            "cd curriki-db && sudo docker-compose up -d",
+            "cd ~/curriki-db && sudo docker-compose up -d",
             "sudo sh ~/curriki-db/db-update-creds.sh"
         ]
         connection {
